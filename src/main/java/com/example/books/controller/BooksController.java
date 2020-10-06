@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.books.dto.BookDTO;
-import com.example.books.service.BooksServiceImpl;
+import com.example.books.service.BooksService;
 
 @RestController
 @RequestMapping("/book-management")
 public class BooksController {
 	@Autowired
-	private BooksServiceImpl booksService;
+	private BooksService booksService;
 	
 	
 	@PostMapping("/books")
