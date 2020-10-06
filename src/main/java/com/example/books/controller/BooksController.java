@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.books.Service.BooksService;
 import com.example.books.dto.BookDTO;
+import com.example.books.service.BooksService;
 
 @RestController
 @RequestMapping("/book-management")

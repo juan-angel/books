@@ -1,4 +1,4 @@
-package com.example.books.Service;
+package com.example.books.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
