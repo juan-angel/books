@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>books</artifactId>
+        <groupId>com.example</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>books.dist</artifactId>
+    <name>books.dist</name>
+    <packaging>jar</packaging>
+
+  <!-- ====================================================================================== -->
+  <!-- MAVEN PROFILES -->
+  <!-- ====================================================================================== -->
+
+    <profiles>
+        <profile>
+            <id>books.dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <books.docker.imageName>books-dev:${project.parent.version}</books.docker.imageName>
+                <books.mariadb.docker.imageName>books-mariadb:${project.parent.version}</books.mariadb.docker.imageName>
+                <compose.mysqldb.memLimit>1024M</compose.mysqldb.memLimit>
+                <compose.mysqldb.memSwapLimit>1536M</compose.mysqldb.memSwapLimit>
+                <dbserver>dev.mariadb.books</dbserver>
+            </properties>
+        </profile>
+        <profile>
+            <id>books.demo</id>
+            <properties>
+                <books.docker.imageName>books-demo:${project.parent.version}</books.docker.imageName>
+                <books.mariadb.docker.imageName>books-mariadb:${project.parent.version}</books.mariadb.docker.imageName>
+                <compose.mysqldb.memLimit>512M</compose.mysqldb.memLimit>
+                <compose.mysqldb.memSwapLimit>1536M</compose.mysqldb.memSwapLimit>
+                <dbserver>demo.mariadb.books</dbserver>
+            </properties>
+        </profile>
+        <profile>
+            <id>build.docker.images</id>
+            <activation>
+                <property>
+                    <name>build.docker.images</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <!-- Resources -->
+            <build>
+                <resources>
+                    <resource>
+                        <directory>${project.basedir}/src/main/docker</directory>
+                        <targetPath>${project.basedir}/target/docker-resources</targetPath>
+                        <includes>
+                            <include>**/*</include>
+                        </includes>
+                        <filtering>true</filtering>
+                    </resource>
+                    <resource>
+                        <directory>src/main/compose</directory>
+                        <filtering>true</filtering>
+                        <targetPath>${basedir}/target/compose-filtered</targetPath>
+                    </resource>
+                </resources>
+                <plugins>
+                    <!-- Maven Docker Plugin -->
+                    <plugin>
+                        <groupId>com.spotify</groupId>
+                        <artifactId>docker-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>default-cli</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>build</goal>
+                                </goals>
+                                <configuration>
+                                    <imageName>${books.docker.imageName}</imageName>
+                                    <dockerDirectory>${project.basedir}/target/docker-resources/books</dockerDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${project.basedir}/../books.app/target/</directory>
+                                            <include>books.app.jar</include>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>mariadb</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>build</goal>
+                                </goals>
+                                <configuration>
+                                    <imageName>${books.mariadb.docker.imageName}</imageName>
+                                    <dockerDirectory>${project.basedir}/target/docker-resources/mariadb</dockerDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>build.compose.file</id>
+            <activation>
+                <property>
+                    <name>build.compose.file</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <!-- Resources -->
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/compose</directory>
+                        <filtering>true</filtering>
+                        <targetPath>${basedir}/target/compose-filtered</targetPath>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+    </profiles>
+
+</project>

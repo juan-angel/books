@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  dev.books:
+    image: ${books.docker.imageName}
+    container_name: 'books.dev'
+    hostname: dev.books
+    depends_on:
+      ${dbserver}:
+        condition: service_healthy
+    healthcheck:
+      test: curl -sS http://127.0.0.1:8080/books/healthcheck || exit 1
+      start_period: 120s
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks: 
+      - books-dev-network
+  ${dbserver}:
+    image: ${books.mariadb.docker.imageName}
+    container_name: ${dbserver}
+    hostname: ${dbserver}
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=mypassword
+    volumes:
+      - ${dbserver}.database:/var/lib/mysql
+    mem_limit: ${compose.mysqldb.memLimit}
+    memswap_limit: ${compose.mysqldb.memSwapLimit}
+    logging:
+      driver: json-file
+      options:
+        max-size: '1048576'
+        max-file: '2'
+    healthcheck:
+        test: "/usr/bin/mysql --user=books --password=books --database=books --execute \"SHOW TABLES;\""
+        interval: 5s
+        timeout: 10s
+        retries: 10
+    ports:
+      - 3306:3306
+    networks: 
+      - books-dev-network
+volumes:
+  ${dbserver}.database:
+    external: false
+networks:
+  books-dev-network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.18.0.0/16

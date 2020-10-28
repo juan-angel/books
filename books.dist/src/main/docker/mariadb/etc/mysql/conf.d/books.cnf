@@ -1,0 +1,53 @@
+##
+## MySQL/InnoDB database configuration
+##
+
+[mysqld]
+bulk_insert_buffer_size = 0
+character_set_server = utf8
+host_cache_size = 0
+innodb_doublewrite = 0
+innodb_autoextend_increment = 16
+innodb_buffer_pool_dump_at_shutdown = OFF
+innodb_buffer_pool_load_at_startup = OFF
+innodb_buffer_pool_size = 384M
+innodb_checksum_algorithm = NONE
+innodb_data_file_path = ibdata1:32M:autoextend:max:4096M
+innodb_fast_shutdown = 1
+innodb_file_per_table = 1
+innodb_flush_log_at_trx_commit = 0
+innodb_lock_wait_timeout = 50
+innodb_log_buffer_size = 8M
+innodb_log_file_size = 64M
+innodb_log_files_in_group = 2
+innodb_thread_concurrency = 20
+join_buffer_size = 128
+key_buffer_size = 8
+max_allowed_packet = 32M
+max_connections = 96
+max_heap_table_size = 512K
+net_buffer_length = 1K
+net_read_timeout  = 1800
+net_write_timeout = 300
+query_cache_size = 0
+query_cache_type = 0
+read_buffer_size = 8200
+read_rnd_buffer_size = 8200
+sort_buffer_size = 8M
+table_definition_cache = 400
+table_open_cache = 64
+thread_cache_size = 1
+thread_stack = 320K
+tmp_table_size = 512K
+wait_timeout = 28800
+
+# Added for encryption
+#plugin_load_add=file_key_management
+#file_key_management = ON
+#file_key_management_encryption_algorithm=AES_CTR
+#file_key_management_filename = /etc/mysql/conf.d/keyfile.txt
+#innodb_encrypt_tables = ON
+#innodb_encrypt_log = ON
+#aria_encrypt_tables = ON
+#encrypt_tmp_disk_tables = ON
+#innodb_encryption_threads = 8
