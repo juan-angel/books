@@ -3,7 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<groupId>com.example</groupId>
 	<artifactId>books</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
@@ -13,11 +13,12 @@
 
 	<properties>
 		<java.version>1.8</java.version>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 
 		<version.plugin.maven.compiler>3.7.0</version.plugin.maven.compiler>
 		<version.plugin.maven.resources>3.0.2</version.plugin.maven.resources>
+		<version.plugin.maven.spotify>1.2.2</version.plugin.maven.spotify>
 
 		<version.spring-boot>2.2.2.RELEASE</version.spring-boot>
 		<version.swagger>2.6.1</version.swagger>
@@ -51,10 +52,10 @@
 				</exclusions>
 			</dependency>
 			<dependency>
-                <groupId>org.mariadb.jdbc</groupId>
-                <artifactId>mariadb-java-client</artifactId>
-                <version>${version.org.mariadb.jdbc}</version>
-            </dependency>
+				<groupId>org.mariadb.jdbc</groupId>
+				<artifactId>mariadb-java-client</artifactId>
+				<version>${version.org.mariadb.jdbc}</version>
+			</dependency>
 			<dependency>
 				<groupId>io.springfox</groupId>
 				<artifactId>springfox-swagger2</artifactId>
@@ -82,29 +83,35 @@
 					<version>${version.spring-boot}</version>
 				</plugin>
 				<!-- Maven Compiler Plugin -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${version.plugin.maven.compiler}</version>
-                    <configuration>
-                        <source>${maven.compiler.source}</source>
-                        <target>${maven.compiler.target}</target>
-                        <encoding>${project.build.sourceEncoding}</encoding>
-                    </configuration>
-                </plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${version.plugin.maven.compiler}</version>
+					<configuration>
+						<source>${maven.compiler.source}</source>
+						<target>${maven.compiler.target}</target>
+						<encoding>${project.build.sourceEncoding}</encoding>
+					</configuration>
+				</plugin>
 				<!-- Maven Resources Plugin -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <version>${version.plugin.maven.resources}</version>
-                </plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>${version.plugin.maven.resources}</version>
+				</plugin>
+				<!-- Maven Spotify Plugin -->
+				<plugin>
+					<groupId>com.spotify</groupId>
+					<artifactId>docker-maven-plugin</artifactId>
+					<version>${version.plugin.maven.spotify}</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
 
 	<modules>
-        <module>books.app</module>
-        <module>books.dist</module>
-    </modules>
+		<module>books.app</module>
+		<module>books.dist</module>
+	</modules>
 
 </project>

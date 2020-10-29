@@ -6,6 +6,42 @@ Sample Spring Boot project to demonstrate docker and docker-compose capabilities
 ## How to compile:
 mvn clean install -DskipTests -Pbooks\[.dev|.demo\]
 
+## How to build and run everything without docker-compose:
+```bash
+# Building the docker image for BD
+cd books.dist/src/main/docker/mariadb
+docker build --tag books-mariadb:0.0.1-SNAPSHOT .
+
+# Create volume for DB
+docker volume create booksdev_dev.mariadb.books.database
+
+# Create a network
+docker network create --driver=bridge --subnet=172.18.0.0/16 books-network
+
+# How to run a docker container of the docker DB image:
+docker run -itd -e MYSQL_ROOT_PASSWORD=mypassword -v booksdev_dev.mariadb.books.database:/var/lib/mysql --name dev.mariadb.books --network=books-network books-mariadb:0.0.1-SNAPSHOT
+
+# Building the docker image for books.app
+cp books.dist/src/main/docker/books/Dockerfile books.app/target/
+cd books.app/target/
+docker build --tag books-dev:0.0.1-SNAPSHOT .
+
+# How to run a docker container of the docker DB image:
+docker run -itd --name dev.books --network=books-network books-dev:0.0.1-SNAPSHOT
+
+# How to stop the docker instance:
+docker stop dev.mariadb.books && docker rm dev.mariadb.books && docker stop dev.books && docker rm dev.books
+
+# How to remove all images:
+docker rmi $(docker images -q)
+
+# How to remove all volumes:
+docker volume prune
+
+#How to remove all networks:
+docker network prune
+```
+
 ## How to compile building docker images:
 
 ### dev
@@ -59,8 +95,3 @@ Stop the container:
 ```bash
 docker-compose -p books.demo -f books.dist/target/compose-filtered/docker-compose-demo.yml down
 ```
-
-## Alternative commands:
-
-### How to run a docker container of the docker DB image:
-docker run -it -e MYSQL_ROOT_PASSWORD=mypasswd -v booksdev_dev.mariadb.books.database books-mariadb:0.0.1-SNAPSHOT
